@@ -3,7 +3,6 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using TMPro;
-using UnityEditor.VersionControl;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
@@ -54,13 +53,20 @@ public class VoiceRecorder : MonoBehaviour
 
     string preprocessing()
     {
-        Dictionary<string, string> message = JsonConvert.DeserializeObject<Dictionary<string, string>>(ret);
-
-        foreach (KeyValuePair<string, string> kvp in message)
+        try
         {
-            Debug.Log(kvp.Key + ": " + kvp.Value);
-        }
+            Dictionary<string, string> message = JsonConvert.DeserializeObject<Dictionary<string, string>>(ret);
 
-        return message["text"];
+            foreach (KeyValuePair<string, string> kvp in message)
+            {
+                Debug.Log(kvp.Key + ": " + kvp.Value);
+            }
+
+            return message["text"];
+        }
+        catch
+        {
+            return "테스트";
+        }
     }
 }
