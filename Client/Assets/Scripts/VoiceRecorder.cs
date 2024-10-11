@@ -5,12 +5,14 @@ using UniRx.Triggers;
 using TMPro;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using System;
 
 public class VoiceRecorder : MonoBehaviour
 {
     AudioSource aud;
     public GameObject text;
-    private TMP_Text _text;
+    private TMP_InputField _text;
     static public string ret = "test";
 
 
@@ -19,7 +21,7 @@ public class VoiceRecorder : MonoBehaviour
     {
         aud = GetComponent<AudioSource>();
 
-        _text = text.GetComponent<TMP_Text>();
+        _text = text.GetComponent<TMP_InputField>();
 
         this.UpdateAsObservable()
             .Select(_ => ret)
@@ -49,6 +51,16 @@ public class VoiceRecorder : MonoBehaviour
         Debug.Log("Recording stopped");
 
         APIController.instance.SendAudioToAPI(aud.clip);
+
+        InputCommandButtonOnClick();
+
+    }
+
+    // 녹음이 완료될 시, 명령어 입력창의 버튼이 자동 클릭됨
+    public void InputCommandButtonOnClick()
+    {
+
+
     }
 
     string preprocessing()

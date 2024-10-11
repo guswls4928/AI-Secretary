@@ -25,10 +25,9 @@ public class InputCommands : MonoBehaviour
     {
         exp += 1;
         Debug.Log($"입력된 명령어: {text.text}");
+        Invoke("changeButton", 3);
         text.text = "";
         button.interactable = !button.interactable;
-        Invoke("changeButton", 3);
-
     }
 
 }
