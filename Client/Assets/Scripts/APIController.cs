@@ -45,7 +45,7 @@ public class APIController : MonoBehaviour
         {
             using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
             {
-                Debug.Log(reader.ReadToEnd());
+                VoiceRecorder.ret = reader.ReadToEnd();
             }
         }
 
