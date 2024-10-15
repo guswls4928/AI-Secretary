@@ -6,6 +6,7 @@ TagManager:
   tags:
   - InputCommandButton
   - InputCommandText
+  - ExpScore
   layers:
   - Default
   - TransparentFX

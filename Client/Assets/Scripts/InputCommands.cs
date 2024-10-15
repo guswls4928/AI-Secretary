@@ -8,6 +8,8 @@ public class InputCommands : MonoBehaviour
     public TMP_InputField text { get; set; }
     public string inputText;
     public float exp;
+    public TMP_Text expScoreUI;
+    public GameObject Commands;
 
     public void changeButton()
     {
@@ -18,16 +20,42 @@ public class InputCommands : MonoBehaviour
     {
         button = GameObject.FindGameObjectWithTag("InputCommandButton").GetComponent<Button>();
         text = GameObject.FindGameObjectWithTag("InputCommandText").GetComponent<TMP_InputField>();
+        expScoreUI = GameObject.FindGameObjectWithTag("ExpScore").GetComponent<TMP_Text>();
+        //expScoreUIText = expScoreUI.GetComponent<TMP_Text>();
+        expScoreUI.text = "exp: 0 %";
         exp = 0;
+
     }
 
     public void SendCommand()
     {
-        exp += 1;
-        Debug.Log($"입력된 명령어: {text.text}");
-        Invoke("changeButton", 3);
+        var commandManager = Commands.GetComponent<InteractiveCommands>();
+        var selectedCommand = commandManager.currentCommand.SubCommands
+            .Find(cmd => cmd.CommandText == inputText);
+
+        if (selectedCommand != null) // 일치하는 명령어가 있으면
+        {
+            // 현재 명령어를 하위 명령어로 이동
+            commandManager.currentCommand = selectedCommand;
+
+            // UI 업데이트
+            commandManager.UpdateCommandUI();
+
+            // 경험치 및 다른 UI 관련 업데이트
+            exp += 5;
+            expScoreUI.text = $"exp: {exp} %";
+            Debug.Log($"입력된 명령어: {inputText}");
+        }
+        else
+        {
+            Debug.Log("명령어가 일치하지 않습니다.");
+        }
+
+        // 명령어 입력 필드 초기화
         text.text = "";
+
+        // 버튼 비활성화 후 일정 시간 후 다시 활성화
+        Invoke("changeButton", 3);
         button.interactable = !button.interactable;
     }
-
 }

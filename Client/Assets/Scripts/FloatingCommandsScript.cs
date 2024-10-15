@@ -6,20 +6,34 @@ public class InteractiveCommands : MonoBehaviour
 {
     public GameObject FloatingTextPrefab;
     public Vector2 boundarySize;
-    public List<string> commandList = new List<string>();
+
+    public Command rootCommand;
+    public Command currentCommand;  // 현재 위치한 명령어
 
     void Start()
     {
-        commandList.Add("음악 생성");
-        commandList.Add("언어 학습");
-        commandList.Add("IoT 설정");
-        commandList.Add("인터랙티브한 명령어 4");
-        commandList.Add("인터랙티브한 명령어  5");
+        // 루트 명령어 생성
+        rootCommand = new Command("루트 명령어");
+        currentCommand = rootCommand;
 
-        foreach (var commandText in commandList)
-        {
-            CreateFloatingCommand(commandText);
-        }
+        // 상위 명령어와 하위 명령어 설정
+        Command musicCommand = new Command("음악 생성");
+        musicCommand.AddSubCommand(new Command("재생"));
+        musicCommand.AddSubCommand(new Command("정지"));
+        rootCommand.AddSubCommand(musicCommand);
+
+        Command languageCommand = new Command("언어 학습");
+        languageCommand.AddSubCommand(new Command("영어"));
+        languageCommand.AddSubCommand(new Command("일본어"));
+        rootCommand.AddSubCommand(languageCommand);
+
+        Command IoTCommand = new Command("IoT 설정");
+        languageCommand.AddSubCommand(new Command("외부 기기 찾기"));
+        languageCommand.AddSubCommand(new Command("연결 끊기"));
+        rootCommand.AddSubCommand(IoTCommand);
+
+        // 명령어 UI 생성
+        UpdateCommandUI();
     }
 
     void Update()
@@ -30,6 +44,28 @@ public class InteractiveCommands : MonoBehaviour
         }
     }
 
+    public void UpdateCommandUI()
+    {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject); // 기존 UI 삭제
+        }
+
+        foreach (var command in currentCommand.SubCommands)
+        {
+            CreateFloatingCommand(command.CommandText);
+        }
+    }
+
+    public void EnterCommand(string commandText)
+    {
+        var selectedCommand = currentCommand.SubCommands.Find(cmd => cmd.CommandText == commandText);
+        if (selectedCommand != null)
+        {
+            currentCommand = selectedCommand;
+            UpdateCommandUI();  // 하위 명령어로 이동 후 UI 업데이트
+        }
+    }
     void CreateFloatingCommand(string commandText)
     {
         boundarySize = new Vector2(1720, 880);  // Canvas size -200
