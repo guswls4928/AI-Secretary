@@ -1,6 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class InputCommands : MonoBehaviour
 {
@@ -21,7 +22,6 @@ public class InputCommands : MonoBehaviour
         button = GameObject.FindGameObjectWithTag("InputCommandButton").GetComponent<Button>();
         text = GameObject.FindGameObjectWithTag("InputCommandText").GetComponent<TMP_InputField>();
         expScoreUI = GameObject.FindGameObjectWithTag("ExpScore").GetComponent<TMP_Text>();
-        //expScoreUIText = expScoreUI.GetComponent<TMP_Text>();
         expScoreUI.text = "exp: 0 %";
         exp = 0;
 
@@ -29,19 +29,24 @@ public class InputCommands : MonoBehaviour
 
     public void SendCommand()
     {
+        string inputText = text.text.Trim();
         var commandManager = Commands.GetComponent<InteractiveCommands>();
+
         var selectedCommand = commandManager.currentCommand.SubCommands
-            .Find(cmd => cmd.CommandText == inputText);
+            .Find(cmd => string.Equals(cmd.CommandText, inputText, StringComparison.OrdinalIgnoreCase));
+
+        Debug.Log("현재 명령어의 하위 명령어:");
+        foreach (var cmd in commandManager.currentCommand.SubCommands)
+        {
+            Debug.Log(cmd.CommandText);
+        }
 
         if (selectedCommand != null) // 일치하는 명령어가 있으면
         {
             // 현재 명령어를 하위 명령어로 이동
             commandManager.currentCommand = selectedCommand;
-
-            // UI 업데이트
             commandManager.UpdateCommandUI();
 
-            // 경험치 및 다른 UI 관련 업데이트
             exp += 5;
             expScoreUI.text = $"exp: {exp} %";
             Debug.Log($"입력된 명령어: {inputText}");
@@ -51,11 +56,9 @@ public class InputCommands : MonoBehaviour
             Debug.Log("명령어가 일치하지 않습니다.");
         }
 
-        // 명령어 입력 필드 초기화
         text.text = "";
-
-        // 버튼 비활성화 후 일정 시간 후 다시 활성화
         Invoke("changeButton", 3);
         button.interactable = !button.interactable;
     }
+
 }

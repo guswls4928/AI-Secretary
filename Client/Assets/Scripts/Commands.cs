@@ -6,7 +6,7 @@ public class Command
     public List<Command> SubCommands;
 
     public Command(string commandText)
-        // 상위 명령어
+    // 상위 명령어
     {
         CommandText = commandText;
         SubCommands = new List<Command>();

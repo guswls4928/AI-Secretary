@@ -28,8 +28,8 @@ public class InteractiveCommands : MonoBehaviour
         rootCommand.AddSubCommand(languageCommand);
 
         Command IoTCommand = new Command("IoT 설정");
-        languageCommand.AddSubCommand(new Command("외부 기기 찾기"));
-        languageCommand.AddSubCommand(new Command("연결 끊기"));
+        IoTCommand.AddSubCommand(new Command("외부 기기 찾기"));
+        IoTCommand.AddSubCommand(new Command("연결 끊기"));
         rootCommand.AddSubCommand(IoTCommand);
 
         // 명령어 UI 생성
