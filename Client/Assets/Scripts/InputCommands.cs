@@ -32,33 +32,36 @@ public class InputCommands : MonoBehaviour
         string inputText = text.text.Trim();
         var commandManager = Commands.GetComponent<InteractiveCommands>();
 
-        var selectedCommand = commandManager.currentCommand.SubCommands
-            .Find(cmd => string.Equals(cmd.CommandText, inputText, StringComparison.OrdinalIgnoreCase));
-
-        Debug.Log("현재 명령어의 하위 명령어:");
-        foreach (var cmd in commandManager.currentCommand.SubCommands)
+        if (inputText == "돌아가기" && commandManager.currentCommand.ParentCommand != null)
         {
-            Debug.Log(cmd.CommandText);
-        }
-
-        if (selectedCommand != null) // 일치하는 명령어가 있으면
-        {
-            // 현재 명령어를 하위 명령어로 이동
-            commandManager.currentCommand = selectedCommand;
+            // 상위 명령어로 이동
+            commandManager.currentCommand = commandManager.currentCommand.ParentCommand;
             commandManager.UpdateCommandUI();
-
-            exp += 5;
-            expScoreUI.text = $"exp: {exp} %";
-            Debug.Log($"입력된 명령어: {inputText}");
         }
         else
         {
-            Debug.Log("명령어가 일치하지 않습니다.");
+            // 하위 명령어 탐색
+            var selectedCommand = commandManager.currentCommand.SubCommands
+                .Find(cmd => string.Equals(cmd.CommandText, inputText, StringComparison.OrdinalIgnoreCase));
+
+
+            if (selectedCommand != null)
+            {
+                commandManager.currentCommand = selectedCommand;
+                commandManager.UpdateCommandUI();
+
+                exp += 5;
+                expScoreUI.text = $"exp: {exp} %";
+                Debug.Log($"입력된 명령어: {inputText}");
+            }
+            else
+            {
+                Debug.Log("명령어가 일치하지 않습니다.");
+            }
+
+            text.text = "";
+            Invoke("changeButton", 3);
+            button.interactable = !button.interactable;
         }
-
-        text.text = "";
-        Invoke("changeButton", 3);
-        button.interactable = !button.interactable;
     }
-
 }

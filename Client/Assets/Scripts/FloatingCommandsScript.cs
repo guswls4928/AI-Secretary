@@ -48,7 +48,12 @@ public class InteractiveCommands : MonoBehaviour
     {
         foreach (Transform child in transform)
         {
-            Destroy(child.gameObject); // 기존 UI 삭제
+            Destroy(child.gameObject);
+        }
+
+        if (currentCommand.ParentCommand != null)
+        {
+            CreateFloatingCommand("돌아가기");
         }
 
         foreach (var command in currentCommand.SubCommands)
@@ -63,9 +68,15 @@ public class InteractiveCommands : MonoBehaviour
         if (selectedCommand != null)
         {
             currentCommand = selectedCommand;
-            UpdateCommandUI();  // 하위 명령어로 이동 후 UI 업데이트
         }
+        else if (commandText == "돌아가기" && currentCommand.ParentCommand != null)
+        {
+            currentCommand = currentCommand.ParentCommand;
+        }
+
+        UpdateCommandUI();
     }
+
     void CreateFloatingCommand(string commandText)
     {
         boundarySize = new Vector2(1720, 880);  // Canvas size -200
