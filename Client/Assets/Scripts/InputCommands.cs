@@ -54,6 +54,11 @@ public class InputCommands : MonoBehaviour
                 expScoreUI.text = $"exp: {exp} %";
                 Debug.Log($"입력된 명령어: {inputText}");
             }
+            else if (inputText == "돌아가기" && commandManager.currentCommand.ParentCommand != null)
+            {
+                commandManager.currentCommand = commandManager.currentCommand.ParentCommand;
+                commandManager.UpdateCommandUI();
+            }
             else
             {
                 Debug.Log("명령어가 일치하지 않습니다.");
