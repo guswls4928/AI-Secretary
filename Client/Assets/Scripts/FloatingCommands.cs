@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractiveCommands : MonoBehaviour
+public class FloatingCommands : MonoBehaviour
 {
     public GameObject FloatingTextPrefab;
     public Vector2 boundarySize;

@@ -30,7 +30,7 @@ public class InputCommands : MonoBehaviour
     public void SendCommand()
     {
         string inputText = text.text.Trim();
-        var commandManager = Commands.GetComponent<InteractiveCommands>();
+        var commandManager = Commands.GetComponent<FloatingCommands>();
 
         if (inputText == "돌아가기" && commandManager.currentCommand.ParentCommand != null)
         {
