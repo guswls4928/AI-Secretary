@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class FloatingCommands : MonoBehaviour
 {
-    public GameObject FloatingTextPrefab;
+    public GameObject FloatingCommandsPrefab;
+    public GameObject CurrentCommandPrefab;
     public Vector2 boundarySize;
 
     public Command rootCommand;
@@ -60,6 +61,9 @@ public class FloatingCommands : MonoBehaviour
         {
             CreateFloatingCommand(command.CommandText);
         }
+
+        // currentCommand ui에 표시
+        //CurrentCommandPrefab;
     }
 
     public void EnterCommand(string commandText)
@@ -87,7 +91,7 @@ public class FloatingCommands : MonoBehaviour
             0
         );
 
-        var newCommand = Instantiate(FloatingTextPrefab, transform);
+        var newCommand = Instantiate(FloatingCommandsPrefab, transform);
 
         RectTransform rectTransform = newCommand.GetComponent<RectTransform>();
         TextMesh textMesh = newCommand.GetComponent<TextMesh>();
@@ -113,7 +117,6 @@ public class FloatingCommands : MonoBehaviour
     }
 }
 
-// 개별 명령어 이동 및 충돌 처리 클래스
 public class CommandMover : MonoBehaviour
 {
     private Vector3 direction;
@@ -128,7 +131,7 @@ public class CommandMover : MonoBehaviour
         direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0).normalized;
     }
 
-    // 이동 처리 함수
+    // 이동 처리
     public void Move()
     {
         rectTransform.anchoredPosition += (Vector2)(direction * speed * Time.deltaTime);
@@ -140,22 +143,19 @@ public class CommandMover : MonoBehaviour
     {
         Vector3 pos = rectTransform.anchoredPosition;
 
-        // 1: ui 화면 경계에 충돌할 경우 xy축 반전.
+        // ui 화면 경계에 충돌할 경우 xy축 반전.
         if (pos.x < -boundary.x / 2 || pos.x > boundary.x / 2)
         {
-            direction.x = -direction.x;  // x축 방향 반전
+            direction.x = -direction.x;
             pos.x = Mathf.Clamp(pos.x, -boundary.x / 2, boundary.x / 2);
         }
 
         if (pos.y < -boundary.y / 2 || pos.y > boundary.y / 2)
         {
-            direction.y = -direction.y;  // y축 방향 반전
+            direction.y = -direction.y;
             pos.y = Mathf.Clamp(pos.y, -boundary.y / 2, boundary.y / 2);
         }
 
         rectTransform.anchoredPosition = pos;
-
-        // 2: 각 명령어에 충돌할 경우 xy축 반전. 구현x
-
     }
 }

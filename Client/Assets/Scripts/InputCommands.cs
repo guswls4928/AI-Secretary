@@ -8,8 +8,6 @@ public class InputCommands : MonoBehaviour
     public Button button { get; set; }
     public TMP_InputField text { get; set; }
     public string inputText;
-    public float exp;
-    public TMP_Text expScoreUI;
     public GameObject Commands;
 
     public void changeButton()
@@ -21,9 +19,6 @@ public class InputCommands : MonoBehaviour
     {
         button = GameObject.FindGameObjectWithTag("InputCommandButton").GetComponent<Button>();
         text = GameObject.FindGameObjectWithTag("InputCommandText").GetComponent<TMP_InputField>();
-        expScoreUI = GameObject.FindGameObjectWithTag("ExpScore").GetComponent<TMP_Text>();
-        expScoreUI.text = "exp: 0 %";
-        exp = 0;
 
     }
 
@@ -50,8 +45,8 @@ public class InputCommands : MonoBehaviour
                 commandManager.currentCommand = selectedCommand;
                 commandManager.UpdateCommandUI();
 
-                exp += 5;
-                expScoreUI.text = $"exp: {exp} %";
+                ExpManager.ret.Value = "5";
+
                 Debug.Log($"입력된 명령어: {inputText}");
             }
             else if (inputText == "돌아가기" && commandManager.currentCommand.ParentCommand != null)
