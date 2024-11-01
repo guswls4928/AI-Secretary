@@ -5,8 +5,10 @@ using UnityEngine;
 public class FloatingCommands : MonoBehaviour
 {
     public GameObject FloatingCommandsPrefab;
-    public GameObject CurrentCommandPrefab;
     public Vector2 boundarySize;
+
+    public GameObject CurrentCommandPrefab;
+    private GameObject curCommandInstance;
 
     public Command rootCommand;
     public Command currentCommand;  // 현재 위치한 명령어
@@ -14,7 +16,7 @@ public class FloatingCommands : MonoBehaviour
     void Start()
     {
         // 루트 명령어 생성
-        rootCommand = new Command("루트 명령어");
+        rootCommand = new Command("HOME");
         currentCommand = rootCommand;
 
         // 상위 명령어와 하위 명령어 설정
@@ -54,7 +56,7 @@ public class FloatingCommands : MonoBehaviour
 
         if (currentCommand.ParentCommand != null)
         {
-            CreateFloatingCommand("돌아가기");
+            CreateFloatingCommand("상위");
         }
 
         foreach (var command in currentCommand.SubCommands)
@@ -62,8 +64,11 @@ public class FloatingCommands : MonoBehaviour
             CreateFloatingCommand(command.CommandText);
         }
 
-        // currentCommand ui에 표시
-        //CurrentCommandPrefab;
+        // CurrentCommand.cs 참조
+        if (CurrentCommandPrefab != null)
+        {
+            CreateOrUpdateCurCommand(currentCommand.CommandText);
+        }
     }
 
     public void EnterCommand(string commandText)
@@ -73,12 +78,32 @@ public class FloatingCommands : MonoBehaviour
         {
             currentCommand = selectedCommand;
         }
-        else if (commandText == "돌아가기" && currentCommand.ParentCommand != null)
+        else if (commandText == "상위" && currentCommand.ParentCommand != null)
         {
             currentCommand = currentCommand.ParentCommand;
         }
 
         UpdateCommandUI();
+    }
+
+
+    public void CreateOrUpdateCurCommand(string commandText)
+    {
+        if (curCommandInstance == null)
+        {
+            curCommandInstance = Instantiate(CurrentCommandPrefab, transform);
+            RectTransform rectTransform = curCommandInstance.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = Vector3.zero;
+        }
+
+        UpdateCurCommandText(commandText);
+    }
+
+    private void UpdateCurCommandText(string commandText)
+    {
+        TextMesh textMesh = curCommandInstance.GetComponent<TextMesh>();
+        textMesh.text = commandText;
+        textMesh.characterSize = 100;
     }
 
     void CreateFloatingCommand(string commandText)
@@ -98,9 +123,6 @@ public class FloatingCommands : MonoBehaviour
 
         rectTransform.anchoredPosition = startPosition;
         newCommand.GetComponent<TextMesh>().text = commandText; 
-        //float randomLocalScale = Random.Range(10, 30);
-        
-        //rectTransform.localScale = new Vector3(randomLocalScale, randomLocalScale, randomLocalScale);
         textMesh.characterSize = Random.Range(20, 50);
 
         newCommand.AddComponent<CommandMover>().Initialize(boundarySize);

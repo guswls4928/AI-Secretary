@@ -27,7 +27,7 @@ public class InputCommands : MonoBehaviour
         string inputText = text.text.Trim();
         var commandManager = Commands.GetComponent<FloatingCommands>();
 
-        if (inputText == "돌아가기" && commandManager.currentCommand.ParentCommand != null)
+        if (inputText == "상위" && commandManager.currentCommand.ParentCommand != null)
         {
             // 상위 명령어로 이동
             commandManager.currentCommand = commandManager.currentCommand.ParentCommand;
@@ -49,7 +49,7 @@ public class InputCommands : MonoBehaviour
 
                 Debug.Log($"입력된 명령어: {inputText}");
             }
-            else if (inputText == "돌아가기" && commandManager.currentCommand.ParentCommand != null)
+            else if (inputText == "상위" && commandManager.currentCommand.ParentCommand != null)
             {
                 commandManager.currentCommand = commandManager.currentCommand.ParentCommand;
                 commandManager.UpdateCommandUI();
