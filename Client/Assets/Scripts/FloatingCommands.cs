@@ -35,7 +35,6 @@ public class FloatingCommands : MonoBehaviour
         IoTCommand.AddSubCommand(new Command("연결 끊기"));
         rootCommand.AddSubCommand(IoTCommand);
 
-        // 명령어 UI 생성
         UpdateCommandUI();
     }
 
@@ -64,10 +63,32 @@ public class FloatingCommands : MonoBehaviour
             CreateFloatingCommand(command.CommandText);
         }
 
-        // CurrentCommand.cs 참조
         if (CurrentCommandPrefab != null)
         {
-            CreateOrUpdateCurCommand(currentCommand.CommandText);
+            Debug.Log($"CurCmd UI에 표시할 명령어: {currentCommand.CommandText}");
+
+            if (curCommandInstance != null)
+            {
+                Destroy(curCommandInstance);
+            }
+
+            curCommandInstance = Instantiate(CurrentCommandPrefab, transform);
+            RectTransform rectTransform = curCommandInstance.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = Vector3.zero;
+
+            TextMesh textMesh = curCommandInstance.GetComponent<TextMesh>();
+            if (textMesh != null)
+            {
+                textMesh.text = currentCommand.CommandText;
+            }
+            else
+            {
+                Debug.LogWarning("CurCmd 인스턴스에 TextMesh가 없습니다.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("CurrentCommandPrefab 할당되지 않았습니다.");
         }
     }
 
@@ -77,14 +98,27 @@ public class FloatingCommands : MonoBehaviour
         if (selectedCommand != null)
         {
             currentCommand = selectedCommand;
+            Debug.Log($"currentCommand가 '{currentCommand.CommandText}'로 변경되었습니다.");
         }
         else if (commandText == "상위" && currentCommand.ParentCommand != null)
         {
             currentCommand = currentCommand.ParentCommand;
+            Debug.Log($"상위 명령어로 이동했습니다. 현재 명령어: {currentCommand.CommandText}");
+        }
+        else
+        {
+            Debug.LogWarning($"'{commandText}' 명령어를 찾을 수 없습니다.");
+        }
+
+        Debug.Log($"현재 명령어: {currentCommand.CommandText}");
+        foreach (var subCommand in currentCommand.SubCommands)
+        {
+            Debug.Log($"하위 명령어: {subCommand.CommandText}");
         }
 
         UpdateCommandUI();
     }
+
 
 
     public void CreateOrUpdateCurCommand(string commandText)
@@ -103,12 +137,12 @@ public class FloatingCommands : MonoBehaviour
     {
         TextMesh textMesh = curCommandInstance.GetComponent<TextMesh>();
         textMesh.text = commandText;
-        textMesh.characterSize = 100;
     }
+
 
     void CreateFloatingCommand(string commandText)
     {
-        boundarySize = new Vector2(1720, 880);  // Canvas size -200
+        boundarySize = new Vector2(1720, 880);
 
         Vector3 startPosition = new Vector3(
             Random.Range(-boundarySize.x / 2, boundarySize.x / 2),

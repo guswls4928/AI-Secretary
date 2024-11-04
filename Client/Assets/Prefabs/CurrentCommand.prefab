@@ -89,7 +89,7 @@ TextMesh:
   m_GameObject: {fileID: 4063402185081914492}
   m_Text: "\uD604\uC7AC \uBA85\uB839\uC5B4"
   m_OffsetZ: 0
-  m_CharacterSize: 100
+  m_CharacterSize: 84
   m_LineSpacing: 1
   m_Anchor: 4
   m_Alignment: 1

@@ -3,7 +3,7 @@ using UnityEngine;
 public class CurrentCommand : MonoBehaviour
 {
     public GameObject CurrentCommandPrefab;
-    private GameObject curCommandInstance; // 생성된 CurrentCommand 객체를 저장
+    private GameObject curCommandInstance;
 
     public void CreateOrUpdateCurCommand(string commandText)
     {
@@ -21,6 +21,5 @@ public class CurrentCommand : MonoBehaviour
     {
         TextMesh textMesh = curCommandInstance.GetComponent<TextMesh>();
         textMesh.text = commandText;
-        textMesh.characterSize = 100;
     }
 }
