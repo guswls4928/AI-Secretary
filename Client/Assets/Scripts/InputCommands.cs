@@ -5,9 +5,8 @@ using System;
 
 public class InputCommands : MonoBehaviour
 {
-    public Button button { get; set; }
-    public TMP_InputField text { get; set; }
-    public string inputText;
+    public Button button;
+    public TMP_InputField text;
     public GameObject Commands;
 
     public void changeButton()
