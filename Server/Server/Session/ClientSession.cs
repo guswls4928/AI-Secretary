@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
@@ -11,17 +11,14 @@ namespace Server
 {
 	class ClientSession : PacketSession
 	{
-		public int SessionId { get; set; }
+		public int PlayerId { get; set; }
+        public int SessionId { get; set; }
 		public GameRoom Room { get; set; }
-		public float PosX { get; set; }
-        public float PosY { get; set; }
-        public float PosZ { get; set; }
+		public string message { get; set; }
 
         public override void OnConnected(EndPoint endPoint)
 		{
 			Console.WriteLine($"OnConnected : {endPoint}");
-
-			Program.Room.Push(() => Program.Room.Enter(this));
 		}
 
 		public override void OnRecvPacket(ArraySegment<byte> buffer)

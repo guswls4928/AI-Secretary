@@ -1,7 +1,5 @@
-﻿using ServerCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using ServerCore;
+using Newtonsoft.Json;
 
 namespace Server
 {
@@ -30,54 +28,40 @@ namespace Server
 			_pendingList.Add(segment);	
 		}
 
-		public void Enter(ClientSession session)
+		public void Enter(ClientSession session, C_EnterGame packet)
 		{
-			_sessions.Add(session);
+			Console.WriteLine($"Enter Player: {packet.playerId}");
+
+            _sessions.Add(session);
 			session.Room = this;
+			session.PlayerId = packet.playerId;
 
-			S_PlayerList players = new S_PlayerList();
-            foreach (ClientSession s in _sessions)
-			{
-				players.players.Add(new S_PlayerList.Player()
-                {
-                    isSelf = (session == s),
-                    playerId = s.SessionId,
-                    posX = s.PosX,
-                    posY = s.PosY,
-                    posZ = s.PosZ
-                });
-            }
-			session.Send(players.Write());
+            S_BroadcastEnterGame history = new S_BroadcastEnterGame();
+			history.message = "test";
 
-            S_BroadcastEnterGame enter = new S_BroadcastEnterGame();
-            enter.playerId = session.SessionId;
-            enter.posX = 0;
-            enter.posY = 0;
-            enter.posZ = 0;
-			Broadcast(enter.Write());
+            var settings = new JsonSerializerSettings
+            {
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+
+            history.commands = JsonConvert.SerializeObject(DLLManager.rootCommand, settings);
+
+            session.Send(history.Write());
         }
 
 		public void Leave(ClientSession session)
 		{
 			_sessions.Remove(session);
-
-            S_BroadcastLeaveGame leave = new S_BroadcastLeaveGame();
-            leave.playerId = session.SessionId;
-            Broadcast(leave.Write());
         }
 
-        public void Move(ClientSession session, C_Move packet)
+        public void Chat(ClientSession session, C_Chat packet)
 		{
-			session.PosX = packet.posX;
-            session.PosY = packet.posY;
-            session.PosZ = packet.posZ;
+			session.message = packet.message;
 
-            S_BroadcastMove move = new S_BroadcastMove();
-            move.playerId = session.SessionId;
-            move.posX = session.PosX;
-            move.posY = session.PosY;
-            move.posZ = session.PosZ;
-            Broadcast(move.Write());
+            S_BroadcastChat chat = new S_BroadcastChat();
+            chat.message = session.message;
+            Broadcast(chat.Write());
         }
 
     }
