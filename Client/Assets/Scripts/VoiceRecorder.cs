@@ -13,7 +13,7 @@ public class VoiceRecorder : MonoBehaviour
     AudioSource aud;
     public GameObject text;
     private TMP_InputField _text;
-    static public string ret = "test";
+    static public string ret = "";
 
 
 
@@ -52,15 +52,6 @@ public class VoiceRecorder : MonoBehaviour
 
         APIController.instance.SendAudioToAPI(aud.clip);
 
-        InputCommandButtonOnClick();
-
-    }
-
-    // 녹음이 완료될 시, 명령어 입력창의 버튼이 자동 클릭됨
-    public void InputCommandButtonOnClick()
-    {
-
-
     }
 
     string preprocessing()
@@ -73,6 +64,8 @@ public class VoiceRecorder : MonoBehaviour
             {
                 Debug.Log(kvp.Key + ": " + kvp.Value);
             }
+            Button b = GameObject.Find("InputCommandButton").GetComponent<Button>();
+            b.onClick.Invoke();
 
             return message["text"];
         }
