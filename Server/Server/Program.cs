@@ -17,7 +17,6 @@ namespace Server
 		static void Main(string[] args)
 		{
 			DLLManager.Instance.Initialize();
-			DLLManager.Instance.SetCommands();
 
             // DNS (Domain Name System)
             string host = Dns.GetHostName();

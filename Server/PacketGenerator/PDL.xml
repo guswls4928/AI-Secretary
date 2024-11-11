@@ -5,7 +5,6 @@
 	</packet>
 	<packet name="S_BroadcastEnterGame">
 		<string name="message"/>
-		<string name="commands"/>
 	</packet>
 	<packet name="C_Chat">
 		<string name="message"/>

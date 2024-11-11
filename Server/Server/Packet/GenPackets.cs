@@ -62,7 +62,6 @@ public class C_EnterGame : IPacket
 public class S_BroadcastEnterGame : IPacket
 {
 	public string message;
-	public string commands;
 
 	public ushort Protocol { get { return (ushort)PacketID.S_BroadcastEnterGame; } }
 
@@ -77,10 +76,6 @@ public class S_BroadcastEnterGame : IPacket
 		count += sizeof(ushort);
 		this.message = Encoding.Unicode.GetString(s.Slice(count, messageLen));
 		count += messageLen;
-		ushort commandsLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
-		count += sizeof(ushort);
-		this.commands = Encoding.Unicode.GetString(s.Slice(count, commandsLen));
-		count += commandsLen;
 	}
 
 	public ArraySegment<byte> Write()
@@ -98,10 +93,6 @@ public class S_BroadcastEnterGame : IPacket
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), messageLen);
 		count += sizeof(ushort);
 		count += messageLen;
-		ushort commandsLen = (ushort)Encoding.Unicode.GetBytes(this.commands, 0, this.commands.Length, segment.Array, segment.Offset + count + sizeof(ushort));
-		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), commandsLen);
-		count += sizeof(ushort);
-		count += commandsLen;
 		success &= BitConverter.TryWriteBytes(s, count);
 		if (success == false)
 			return null;

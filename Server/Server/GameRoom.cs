@@ -1,5 +1,4 @@
 using ServerCore;
-using Newtonsoft.Json;
 
 namespace Server
 {
@@ -38,14 +37,6 @@ namespace Server
 
             S_BroadcastEnterGame history = new S_BroadcastEnterGame();
 			history.message = "test";
-
-            var settings = new JsonSerializerSettings
-            {
-                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-
-            history.commands = JsonConvert.SerializeObject(DLLManager.rootCommand, settings);
 
             session.Send(history.Write());
         }
