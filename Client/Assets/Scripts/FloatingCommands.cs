@@ -1,4 +1,7 @@
+using Python.Runtime;
+using UniRx;
 using UnityEngine;
+using Python.Runtime;
 
 public class FloatingCommands : MonoBehaviour
 {
@@ -13,26 +16,8 @@ public class FloatingCommands : MonoBehaviour
 
     void Start()
     {
-        // 루트 명령어 생성
-        rootCommand = new Command("HOME");
+        rootCommand = SetCommand();
         currentCommand = rootCommand;
-
-        // 상위 명령어와 하위 명령어 설정
-        Command musicCommand = new Command("음악 생성");
-        musicCommand.AddSubCommand(new Command("재생"));
-        musicCommand.AddSubCommand(new Command("정지"));
-        rootCommand.AddSubCommand(musicCommand);
-
-        Command languageCommand = new Command("언어 학습");
-        languageCommand.AddSubCommand(new Command("영어"));
-        languageCommand.AddSubCommand(new Command("일본어"));
-        rootCommand.AddSubCommand(languageCommand);
-
-        Command IoTCommand = new Command("IoT 설정");
-        IoTCommand.AddSubCommand(new Command("외부 기기 찾기"));
-        IoTCommand.AddSubCommand(new Command("연결 끊기"));
-        rootCommand.AddSubCommand(IoTCommand);
-
         UpdateCommandUI();
     }
 
@@ -42,6 +27,41 @@ public class FloatingCommands : MonoBehaviour
         {
             MoveFloatingCommand(transform.GetChild(i).gameObject);
         }
+    }
+
+    public Command SetCommand()
+    {
+        Runtime.PythonDLL = Application.dataPath + "/StreamingAssets/embedded-python/python312.dll";
+        PythonEngine.Initialize();
+
+        Command rootCommand = new Command("Home");
+
+        foreach (var file in System.IO.Directory.GetFiles(Application.dataPath + "/Dlls"))
+        {
+            if (file.EndsWith(".meta"))
+                continue;
+
+            string moduleName = System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetFileNameWithoutExtension(file));
+
+            dynamic os = Py.Import("os");
+            dynamic sys = Py.Import("sys");
+            sys.path.append(Application.dataPath + "/Dlls");
+
+            dynamic module = Py.Import(moduleName);
+
+            string name = module.GetName();
+            Command newCommand = new Command(name);
+
+            foreach (dynamic command in module.GetCommands())
+            {
+                newCommand.AddSubCommand(new Command(command.ToString()));
+            }
+            rootCommand.AddSubCommand(newCommand);
+        }
+
+        PythonEngine.Shutdown();
+
+        return rootCommand;
     }
 
     public void UpdateCommandUI()
