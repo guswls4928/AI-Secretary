@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,11 +19,9 @@ namespace DummyClient
 			{
 				foreach (ServerSession session in _sessions)
 				{
-					C_Move movePacket = new C_Move();
-                    movePacket.posX = _rand.Next(-50, 50);
-                    movePacket.posY = 0;
-                    movePacket.posZ = _rand.Next(-50, 50);
-					session.Send(movePacket.Write());
+					C_Chat chatPacket = new C_Chat();
+                    chatPacket.message = _rand.Next(-50, 50).ToString();
+					session.Send(chatPacket.Write());
 				}
 			}
 		}
