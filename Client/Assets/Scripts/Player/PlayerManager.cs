@@ -12,7 +12,7 @@ public class PlayerManager
 
     public void EnterGame(S_BroadcastEnterGame packet)
     {
-
+        Debug.Log(packet.message);
     }
 
     public void ChatSync(S_BroadcastChat packet)

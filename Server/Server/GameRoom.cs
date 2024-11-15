@@ -36,7 +36,7 @@ namespace Server
 			session.PlayerId = packet.playerId;
 
             S_BroadcastEnterGame history = new S_BroadcastEnterGame();
-			history.message = "test";
+			history.message = session.message;
 
             session.Send(history.Write());
         }
