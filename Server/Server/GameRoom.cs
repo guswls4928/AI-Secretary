@@ -1,4 +1,5 @@
 using ServerCore;
+using System.Diagnostics;
 
 namespace Server
 {
@@ -36,7 +37,9 @@ namespace Server
 			session.PlayerId = packet.playerId;
 
             S_BroadcastEnterGame history = new S_BroadcastEnterGame();
-			history.message = session.message;
+			history.message = "";
+			if(session.message != null)
+                history.message = session.message;
 
             session.Send(history.Write());
         }
@@ -49,6 +52,7 @@ namespace Server
         public void Chat(ClientSession session, C_Chat packet)
 		{
 			session.message = packet.message;
+			Console.WriteLine($"{session.PlayerId}'s Chat : {packet.message}");
 
             S_BroadcastChat chat = new S_BroadcastChat();
             chat.message = session.message;
