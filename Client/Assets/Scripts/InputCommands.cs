@@ -46,12 +46,15 @@ public class InputCommands : MonoBehaviour
 
                 ExpManager.ret.Value = "5";
 
+                MyPlayer.instance.SendCommand(inputText);
                 Debug.Log($"입력된 명령어: {inputText}");
             }
             else if (inputText == "상위" && commandManager.currentCommand.ParentCommand != null)
             {
                 commandManager.currentCommand = commandManager.currentCommand.ParentCommand;
                 commandManager.UpdateCommandUI();
+
+                MyPlayer.instance.SendCommand(inputText);
             }
             else
             {
