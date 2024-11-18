@@ -225,6 +225,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   exp: 0
   expScoreUI: {fileID: 0}
+--- !u!114 &160828649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160828637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b60ae3c798642949b113bb6927cfc24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &227207183
 GameObject:
   m_ObjectHideFlags: 0
@@ -1561,8 +1573,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uBA85\uB839\uC5B4\uB97C \uC785\uB825\uD558\uC138\uC694...\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1cbee5c1770830b42844810e7c8dbb3d, type: 2}
-  m_sharedMaterial: {fileID: 203702621389574707, guid: 1cbee5c1770830b42844810e7c8dbb3d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 195df6fed71eb1e4dba926067cb96b2f, type: 2}
+  m_sharedMaterial: {fileID: 1855390762193496414, guid: 195df6fed71eb1e4dba926067cb96b2f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1716,8 +1728,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uBA85\uB839\uC5B4\uB97C \uC785\uB825\uD558\uC138\uC694...\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1cbee5c1770830b42844810e7c8dbb3d, type: 2}
-  m_sharedMaterial: {fileID: 203702621389574707, guid: 1cbee5c1770830b42844810e7c8dbb3d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 195df6fed71eb1e4dba926067cb96b2f, type: 2}
+  m_sharedMaterial: {fileID: 1855390762193496414, guid: 195df6fed71eb1e4dba926067cb96b2f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2365,6 +2377,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1140192229911134065, guid: 7e423c2dfb419c64e8d5a95c58168741, type: 3}
       insertIndex: -1
       addedObject: {fileID: 160828643}
+    - targetCorrespondingSourceObject: {fileID: 1140192229911134065, guid: 7e423c2dfb419c64e8d5a95c58168741, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 160828649}
   m_SourcePrefab: {fileID: 100100000, guid: 7e423c2dfb419c64e8d5a95c58168741, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
