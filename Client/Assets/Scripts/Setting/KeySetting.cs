@@ -49,7 +49,7 @@ public class KeySetting : MonoBehaviour
                 && !string.IsNullOrWhiteSpace(text.text))
             .Subscribe(_ =>
             {
-                if (text.isFocused) inputButton.onClick.Invoke();
+                inputButton.onClick.Invoke();
             })
             .AddTo(this);
 
