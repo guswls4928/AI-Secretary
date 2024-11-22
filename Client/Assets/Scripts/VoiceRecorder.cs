@@ -72,7 +72,7 @@ public class VoiceRecorder : MonoBehaviour
         }
         catch
         {
-            return "테스트";
+            return "";
         }
     }
 }
