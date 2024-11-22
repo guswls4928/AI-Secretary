@@ -64,14 +64,15 @@ public class VoiceRecorder : MonoBehaviour
             {
                 Debug.Log(kvp.Key + ": " + kvp.Value);
             }
-            Button b = GameObject.Find("InputCommandButton").GetComponent<Button>();
-            b.onClick.Invoke();
+
+            Button button = GameObject.FindGameObjectWithTag("InputCommandButton").GetComponent<Button>();
+            button.onClick.Invoke();
 
             return message["text"];
         }
         catch
         {
-            return "테스트";
+            return "";
         }
     }
 }

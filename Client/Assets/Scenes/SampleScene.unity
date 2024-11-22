@@ -539,7 +539,7 @@ GameObject:
   - component: {fileID: 650751884}
   - component: {fileID: 650751883}
   m_Layer: 5
-  m_Name: MictButton
+  m_Name: MicButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -812,6 +812,8 @@ GameObject:
   - component: {fileID: 842215143}
   - component: {fileID: 842215146}
   - component: {fileID: 842215147}
+  - component: {fileID: 842215148}
+  - component: {fileID: 842215149}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -1051,6 +1053,30 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &842215148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842215142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07e4fd3a734f6764d827303d941cfcc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &842215149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842215142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80999f36dd5c78f4cbbd0b117df14bf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1571,7 +1597,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uBA85\uB839\uC5B4\uB97C \uC785\uB825\uD558\uC138\uC694...\u200B"
+  m_text: "\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 195df6fed71eb1e4dba926067cb96b2f, type: 2}
   m_sharedMaterial: {fileID: 1855390762193496414, guid: 195df6fed71eb1e4dba926067cb96b2f, type: 2}
@@ -1713,7 +1739,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1519701310}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -2074,7 +2100,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: "\uBA85\uB839\uC5B4\uB97C \uC785\uB825\uD558\uC138\uC694..."
+  m_Text: 
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
