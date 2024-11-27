@@ -5,8 +5,8 @@ using System;
 
 public class InputCommands : MonoBehaviour
 {
-    public Button button;
-    public TMP_InputField text;
+    Button button;
+    TMP_InputField text;
     public GameObject Commands;
 
     public void changeButton()
@@ -23,8 +23,12 @@ public class InputCommands : MonoBehaviour
 
     public void SendCommand()
     {
-        string inputText = text.text.Trim();
+        string inputText;
+        inputText = text.text.Trim();
+
         var commandManager = Commands.GetComponent<FloatingCommands>();
+
+        Debug.Log($"전송된 명령어: {inputText}");
 
         if (inputText == "상위" && commandManager.currentCommand.ParentCommand != null)
         {
@@ -47,7 +51,6 @@ public class InputCommands : MonoBehaviour
                 ExpManager.ret.Value = "5";
 
                 MyPlayer.instance.SendCommand(inputText);
-                Debug.Log($"입력된 명령어: {inputText}");
             }
             else if (inputText == "상위" && commandManager.currentCommand.ParentCommand != null)
             {
@@ -62,7 +65,7 @@ public class InputCommands : MonoBehaviour
             }
 
             text.text = "";
-            Invoke("changeButton", 3);
+            Invoke("changeButton", 2);
             button.interactable = !button.interactable;
         }
     }
