@@ -59,7 +59,7 @@ public class FloatingCommands : MonoBehaviour
             rootCommand.AddSubCommand(newCommand);
         }
 
-        PythonEngine.Shutdown();
+        //PythonEngine.Shutdown();
 
         return rootCommand;
     }
@@ -83,8 +83,6 @@ public class FloatingCommands : MonoBehaviour
 
         if (CurrentCommandPrefab != null)
         {
-            Debug.Log($"CurCmd UI에 표시할 명령어: {currentCommand.CommandText}");
-
             if (curCommandInstance != null)
             {
                 Destroy(curCommandInstance);
@@ -116,12 +114,10 @@ public class FloatingCommands : MonoBehaviour
         if (selectedCommand != null)
         {
             currentCommand = selectedCommand;
-            Debug.Log($"currentCommand가 '{currentCommand.CommandText}'로 변경되었습니다.");
         }
         else if (commandText == "상위" && currentCommand.ParentCommand != null)
         {
             currentCommand = currentCommand.ParentCommand;
-            Debug.Log($"상위 명령어로 이동했습니다. 현재 명령어: {currentCommand.CommandText}");
         }
         else
         {
