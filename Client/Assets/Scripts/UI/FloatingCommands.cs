@@ -51,7 +51,7 @@ public class FloatingCommands : MonoBehaviour
         {
             foreach (var command in func.GetCommand())
             {
-                commandList.Add(command.title.ToString());
+                commandList.Add(command.ToString());
             }
         }
     }
