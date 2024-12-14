@@ -1,4 +1,5 @@
 using System.Net;
+using Python.Runtime;
 using ServerCore;
 
 namespace Server
@@ -16,7 +17,9 @@ namespace Server
 
 		static void Main(string[] args)
 		{
-			DLLManager.Instance.Initialize();
+            Runtime.PythonDLL = @"C:\Users\Hyeon\AppData\Local\Programs\Python\Python312\python312.dll";
+            PythonEngine.Initialize();
+            PythonEngine.BeginAllowThreads();
 
             // DNS (Domain Name System)
             string host = Dns.GetHostName();
