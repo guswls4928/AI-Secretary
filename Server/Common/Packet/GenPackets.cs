@@ -102,6 +102,7 @@ public class S_BroadcastEnterGame : IPacket
 
 public class C_Chat : IPacket
 {
+	public string module;
 	public string command;
 	public string query;
 
@@ -114,6 +115,10 @@ public class C_Chat : IPacket
 		ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
 		count += sizeof(ushort);
 		count += sizeof(ushort);
+		ushort moduleLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+		count += sizeof(ushort);
+		this.module = Encoding.Unicode.GetString(s.Slice(count, moduleLen));
+		count += moduleLen;
 		ushort commandLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
 		count += sizeof(ushort);
 		this.command = Encoding.Unicode.GetString(s.Slice(count, commandLen));
@@ -135,6 +140,10 @@ public class C_Chat : IPacket
 		count += sizeof(ushort);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.C_Chat);
 		count += sizeof(ushort);
+		ushort moduleLen = (ushort)Encoding.Unicode.GetBytes(this.module, 0, this.module.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), moduleLen);
+		count += sizeof(ushort);
+		count += moduleLen;
 		ushort commandLen = (ushort)Encoding.Unicode.GetBytes(this.command, 0, this.command.Length, segment.Array, segment.Offset + count + sizeof(ushort));
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), commandLen);
 		count += sizeof(ushort);

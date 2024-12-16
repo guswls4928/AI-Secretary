@@ -50,9 +50,10 @@ public class MyPlayer : Player
         _network.Send(enter.Write());
     }
 
-    public void SendCommand(string command, string query = "")
+    public void SendCommand(string name, string command, string query = "")
     {
         C_Chat chatPacket = new C_Chat();
+        chatPacket.module = name;
         chatPacket.command = command;
         chatPacket.query = query;
 

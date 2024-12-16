@@ -21,6 +21,8 @@ namespace Server
             PythonEngine.Initialize();
             PythonEngine.BeginAllowThreads();
 
+			DLLManager.Instance.SetModule();
+
             // DNS (Domain Name System)
             string host = Dns.GetHostName();
 			IPHostEntry ipHost = Dns.GetHostEntry(host);

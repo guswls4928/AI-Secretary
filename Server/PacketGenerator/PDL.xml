@@ -7,6 +7,7 @@
 		<string name="message"/>
 	</packet>
 	<packet name="C_Chat">
+		<string name="module"/>	
 		<string name="command"/>
 		<string name="query"/>
 	</packet>
