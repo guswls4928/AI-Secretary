@@ -65,6 +65,7 @@ public class FloatingCommands : MonoBehaviour
 
             dynamic sys = Py.Import("sys");
             sys.path.append(Application.dataPath + "/Dlls");
+            sys.path.append(Application.dataPath + "/StreamingAssets/embedded-python/Lib/site-packages");
 
             string name = System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetFileNameWithoutExtension(file));
 
