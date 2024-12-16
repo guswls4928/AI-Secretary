@@ -96,7 +96,7 @@ public class FloatingCommands : MonoBehaviour
         }
         else
         {
-            commandList.Add("상위");
+            commandList.Add("Cells");
 
             foreach (var command in func.GetCommand())
             {
@@ -133,7 +133,7 @@ public class FloatingCommands : MonoBehaviour
 
     public void EnterCommand(string commandText)
     {
-        var selectedCommand = commandList.Find(cmd => cmd.Replace(" ", string.Empty) == commandText);
+        var selectedCommand = commandList.Find(cmd => cmd.Replace(" ", string.Empty).ToLower() == commandText.Replace(" ", string.Empty).ToLower());
         Debug.Log(selectedCommand);
         if (selectedCommand == null)
         {
@@ -145,19 +145,19 @@ public class FloatingCommands : MonoBehaviour
             moduleName = selectedCommand;
             SetModule();
         }
-        else if (commandText == "상위")
+        else if (selectedCommand == "Cells")
         {
             func.Stop();
             moduleName = null;
         }
         else
         {
-            dynamic req = func.Execute(commandText);
+            dynamic req = func.Execute(selectedCommand);
 
             try
             {
                 if((bool)req == false)
-                    MyPlayer.Instance.SendCommand(moduleName, commandText);
+                    MyPlayer.Instance.SendCommand(moduleName, selectedCommand);
             }
             catch (System.Exception e) { }
             ExpManager.ret.Value = "5";
