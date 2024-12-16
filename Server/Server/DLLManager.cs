@@ -16,17 +16,21 @@ namespace Server
 
         public void SetModule()
         {
+            string currentPath = AppDomain.CurrentDomain.BaseDirectory;
+            string basePath = Directory.GetParent(currentPath).Parent.Parent.Parent.FullName;
+            string targetPath = Path.Combine(basePath, "embedded-python", "python312.dll");
+
             using (Py.GIL())
             {
-                foreach (var file in System.IO.Directory.GetFiles("C:\\Users\\Hyeon\\project\\AI-Secretary\\Server\\Server\\DLLs\\", "*.pyd"))
+                foreach (var file in System.IO.Directory.GetFiles(Path.Combine(basePath, "DLLs"), "*.pyd"))
                 {
                     string modoleName = System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetFileNameWithoutExtension(file));
 
                     dynamic sys = Py.Import("sys");
-                    sys.path.append("C:\\Users\\Hyeon\\project\\AI-Secretary\\Server\\Server\\DLLs\\");
+                    sys.path.append(Path.Combine(basePath, "DLLs"));
 
                     dynamic os = Py.Import("os");
-                    os.environ.__setitem__("DLLS_PATH", "C:\\Users\\Hyeon\\project\\AI-Secretary\\Server\\Server\\DLLs");
+                    os.environ.__setitem__("DLLS_PATH", Path.Combine(basePath, "DLLs"));
 
                     dynamic module = Py.Import(modoleName);
                     _dllList.Add((string)module.GetName(), module.Create(10));

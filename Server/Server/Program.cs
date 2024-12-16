@@ -17,7 +17,11 @@ namespace Server
 
 		static void Main(string[] args)
 		{
-            Runtime.PythonDLL = @"C:\Users\Hyeon\AppData\Local\Programs\Python\Python312\python312.dll";
+            string currentPath = AppDomain.CurrentDomain.BaseDirectory;
+            string basePath = Directory.GetParent(currentPath).Parent.Parent.Parent.FullName;
+            string targetPath = Path.Combine(basePath, "embedded-python", "python312.dll");
+
+            Runtime.PythonDLL = targetPath;
             PythonEngine.Initialize();
             PythonEngine.BeginAllowThreads();
 

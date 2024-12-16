@@ -166,6 +166,11 @@ public class FloatingCommands : MonoBehaviour
         UpdateCommandUI();
     }
 
+    private void OnDestroy()
+    {
+        func.Stop();
+    }
+
     #region UI
     void CreateFloatingCommand(string commandText)
     {
