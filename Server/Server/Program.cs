@@ -1,4 +1,5 @@
 using System.Net;
+using Python.Runtime;
 using ServerCore;
 
 namespace Server
@@ -16,7 +17,15 @@ namespace Server
 
 		static void Main(string[] args)
 		{
-			DLLManager.Instance.Initialize();
+            string currentPath = AppDomain.CurrentDomain.BaseDirectory;
+            string basePath = Directory.GetParent(currentPath).Parent.Parent.Parent.FullName;
+            string targetPath = Path.Combine(basePath, "embedded-python", "python312.dll");
+
+            Runtime.PythonDLL = targetPath;
+            PythonEngine.Initialize();
+            PythonEngine.BeginAllowThreads();
+
+			DLLManager.Instance.SetModule();
 
             // DNS (Domain Name System)
             string host = Dns.GetHostName();

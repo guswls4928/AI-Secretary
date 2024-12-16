@@ -102,7 +102,9 @@ public class S_BroadcastEnterGame : IPacket
 
 public class C_Chat : IPacket
 {
-	public string message;
+	public string module;
+	public string command;
+	public string query;
 
 	public ushort Protocol { get { return (ushort)PacketID.C_Chat; } }
 
@@ -113,10 +115,18 @@ public class C_Chat : IPacket
 		ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
 		count += sizeof(ushort);
 		count += sizeof(ushort);
-		ushort messageLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+		ushort moduleLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
 		count += sizeof(ushort);
-		this.message = Encoding.Unicode.GetString(s.Slice(count, messageLen));
-		count += messageLen;
+		this.module = Encoding.Unicode.GetString(s.Slice(count, moduleLen));
+		count += moduleLen;
+		ushort commandLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+		count += sizeof(ushort);
+		this.command = Encoding.Unicode.GetString(s.Slice(count, commandLen));
+		count += commandLen;
+		ushort queryLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+		count += sizeof(ushort);
+		this.query = Encoding.Unicode.GetString(s.Slice(count, queryLen));
+		count += queryLen;
 	}
 
 	public ArraySegment<byte> Write()
@@ -130,10 +140,18 @@ public class C_Chat : IPacket
 		count += sizeof(ushort);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.C_Chat);
 		count += sizeof(ushort);
-		ushort messageLen = (ushort)Encoding.Unicode.GetBytes(this.message, 0, this.message.Length, segment.Array, segment.Offset + count + sizeof(ushort));
-		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), messageLen);
+		ushort moduleLen = (ushort)Encoding.Unicode.GetBytes(this.module, 0, this.module.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), moduleLen);
 		count += sizeof(ushort);
-		count += messageLen;
+		count += moduleLen;
+		ushort commandLen = (ushort)Encoding.Unicode.GetBytes(this.command, 0, this.command.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), commandLen);
+		count += sizeof(ushort);
+		count += commandLen;
+		ushort queryLen = (ushort)Encoding.Unicode.GetBytes(this.query, 0, this.query.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), queryLen);
+		count += sizeof(ushort);
+		count += queryLen;
 		success &= BitConverter.TryWriteBytes(s, count);
 		if (success == false)
 			return null;
@@ -184,7 +202,7 @@ public class S_BroadcastChat : IPacket
 
 public class S_Response : IPacket
 {
-	public string message;
+	public string response;
 
 	public ushort Protocol { get { return (ushort)PacketID.S_Response; } }
 
@@ -195,10 +213,10 @@ public class S_Response : IPacket
 		ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
 		count += sizeof(ushort);
 		count += sizeof(ushort);
-		ushort messageLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+		ushort responseLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
 		count += sizeof(ushort);
-		this.message = Encoding.Unicode.GetString(s.Slice(count, messageLen));
-		count += messageLen;
+		this.response = Encoding.Unicode.GetString(s.Slice(count, responseLen));
+		count += responseLen;
 	}
 
 	public ArraySegment<byte> Write()
@@ -212,10 +230,10 @@ public class S_Response : IPacket
 		count += sizeof(ushort);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.S_Response);
 		count += sizeof(ushort);
-		ushort messageLen = (ushort)Encoding.Unicode.GetBytes(this.message, 0, this.message.Length, segment.Array, segment.Offset + count + sizeof(ushort));
-		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), messageLen);
+		ushort responseLen = (ushort)Encoding.Unicode.GetBytes(this.response, 0, this.response.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), responseLen);
 		count += sizeof(ushort);
-		count += messageLen;
+		count += responseLen;
 		success &= BitConverter.TryWriteBytes(s, count);
 		if (success == false)
 			return null;

@@ -26,8 +26,7 @@ public class NetworkManager : MonoBehaviour
         Connector connector = new Connector();
 
         connector.Connect(endPoint,
-            () => { return _session; },
-            1);
+            () => { return _session; });
     }
 
     private void Update()
