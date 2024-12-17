@@ -791,7 +791,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 746770345}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.0011146019}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -857,7 +857,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: c77c0f98439eaa147b3b701363ba211c, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2304,7 +2304,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FloatingCommandsPrefab: {fileID: 8368480408978509373, guid: 793e95e8d30239847accd631291c92d6, type: 3}
   boundarySize: {x: 0, y: 0}
-  moduleName: 
+  curName: 
 --- !u!1001 &1637765211492574340
 PrefabInstance:
   m_ObjectHideFlags: 0

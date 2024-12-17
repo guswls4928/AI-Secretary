@@ -8,12 +8,15 @@ public class FloatingCommands : MonoBehaviour
     public GameObject FloatingCommandsPrefab;
     public Vector2 boundarySize;
 
+    public GameObject curName;
+    private CurrentCommand curNameManager;
+
     Dictionary<string, string> DllList = new();
 
     List<string> commandList = new();
 #nullable enable
-    public string? moduleName;
-    dynamic func;
+    string? moduleName;
+    dynamic? func;
 
     private static FloatingCommands instance = null;
 
@@ -74,6 +77,8 @@ public class FloatingCommands : MonoBehaviour
             DllList.Add((string)temp.GetName(), name);
         }
 
+        curNameManager = curName.GetComponent<CurrentCommand>();
+
         SetCommand();
         UpdateCommandUI();
     }
@@ -96,9 +101,9 @@ public class FloatingCommands : MonoBehaviour
         }
         else
         {
-            commandList.Add("Cells");
+            commandList.Add("홈");
 
-            foreach (var command in func.GetCommand())
+            foreach (var command in func!.GetCommand())
             {
                 commandList.Add(command.ToString());
             }
@@ -120,6 +125,15 @@ public class FloatingCommands : MonoBehaviour
 
     public void UpdateCommandUI()
     {
+        try
+        {
+            curNameManager.UpdateCurCommandText((string)func.state.title);
+        }
+        catch (System.Exception e)
+        {
+            curNameManager.UpdateCurCommandText("Home");
+        }
+
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
@@ -145,19 +159,22 @@ public class FloatingCommands : MonoBehaviour
             moduleName = selectedCommand;
             SetModule();
         }
-        else if (selectedCommand == "Cells")
+        else if (selectedCommand == "홈")
         {
-            func.Stop();
+            func!.Stop();
             moduleName = null;
+            func = null;
         }
         else
         {
-            dynamic req = func.Execute(selectedCommand);
+            dynamic req = func!.Execute(selectedCommand);
 
             try
             {
                 if((bool)req == false)
+                {
                     MyPlayer.Instance.SendCommand(moduleName, selectedCommand);
+                }
             }
             catch (System.Exception e) { }
             ExpManager.ret.Value = "5";
@@ -169,7 +186,8 @@ public class FloatingCommands : MonoBehaviour
 
     private void OnDestroy()
     {
-        func.Stop();
+        func!.Stop();
+        func = null;
     }
 
     #region UI
