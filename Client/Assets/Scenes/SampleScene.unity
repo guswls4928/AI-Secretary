@@ -2133,7 +2133,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Commands: {fileID: 1766335327}
-  curName: {fileID: 746770345}
 --- !u!1 &1722329750
 GameObject:
   m_ObjectHideFlags: 0
@@ -2304,7 +2303,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FloatingCommandsPrefab: {fileID: 8368480408978509373, guid: 793e95e8d30239847accd631291c92d6, type: 3}
   boundarySize: {x: 0, y: 0}
-  curName: 
+  curName: {fileID: 746770345}
 --- !u!1001 &1637765211492574340
 PrefabInstance:
   m_ObjectHideFlags: 0
