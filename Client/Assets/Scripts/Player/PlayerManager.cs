@@ -22,6 +22,6 @@ public class PlayerManager
 
     public void Response(S_Response packet)
     {
-        Debug.Log(packet.message);
+        FloatingCommands.Instance.ServerResponse(packet.response);
     }
 }

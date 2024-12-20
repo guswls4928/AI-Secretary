@@ -1,60 +1,49 @@
+using Python.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Python.Runtime;
 
 namespace Server
 {
-    public class Command
+    class DLLManager
     {
-        public string CommandText;
-        public List<Command> SubCommands;
-        public Command ParentCommand;
+        static DLLManager _instance = new DLLManager();
+        public static DLLManager Instance { get { return _instance; } }
 
-        public Command(string commandText, Command parent = null)
+        Dictionary<string, dynamic> _dllList = new Dictionary<string, dynamic>();
+
+        public void SetModule()
         {
-            CommandText = commandText;
-            SubCommands = new List<Command>();
-            ParentCommand = parent;
-        }
+            string currentPath = AppDomain.CurrentDomain.BaseDirectory;
+            string basePath = Directory.GetParent(currentPath).Parent.Parent.Parent.FullName;
+            string targetPath = Path.Combine(basePath, "embedded-python", "python312.dll");
 
-        public void AddSubCommand(Command subCommand)
-        {
-            subCommand.ParentCommand = this;
-            SubCommands.Add(subCommand);
-        }
-    }
-
-
-    internal class DLLManager
-    {
-        public static DLLManager instance;
-        private static bool isInitialized = false;
-
-        public static DLLManager Instance
-        {
-            get
+            using (Py.GIL())
             {
-                if (instance == null)
+                foreach (var file in System.IO.Directory.GetFiles(Path.Combine(basePath, "DLLs"), "*.pyd"))
                 {
-                    instance = new DLLManager();
+                    string modoleName = System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetFileNameWithoutExtension(file));
+
+                    dynamic sys = Py.Import("sys");
+                    sys.path.append(Path.Combine(basePath, "DLLs"));
+
+                    dynamic os = Py.Import("os");
+                    os.environ.__setitem__("DLLS_PATH", Path.Combine(basePath, "DLLs"));
+
+                    dynamic module = Py.Import(modoleName);
+                    _dllList.Add((string)module.GetName(), module.Create(10));
                 }
-                return instance;
             }
         }
 
-        public void Initialize()
+        public string Execute(C_Chat packet)
         {
-            if (PythonEngine.IsInitialized)
+            using (Py.GIL())
             {
-                return;
+                return _dllList[packet.module].Execute(packet.command, packet.query);
             }
-            Runtime.PythonDLL = @"C:\Users\Hyeon\AppData\Local\Programs\Python\Python312\python312.dll";
-            PythonEngine.Initialize();
         }
-
-        
     }
 }

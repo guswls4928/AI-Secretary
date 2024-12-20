@@ -7,12 +7,14 @@
 		<string name="message"/>
 	</packet>
 	<packet name="C_Chat">
-		<string name="message"/>
+		<string name="module"/>	
+		<string name="command"/>
+		<string name="query"/>
 	</packet>
 	<packet name="S_BroadcastChat">
 		<string name="message"/>
 	</packet>
 	<packet name="S_Response">
-		<string name="message"/>
+		<string name="response"/>
 	</packet>
 </PDL>

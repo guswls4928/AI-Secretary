@@ -18,7 +18,6 @@ public class ExpManager : MonoBehaviour
 
         ret.Subscribe(value =>
         {
-            Debug.Log("ret가 변경되었습니다: " + value);
             expScoreUI.text = UpdateExp();
         });
 
@@ -30,8 +29,6 @@ public class ExpManager : MonoBehaviour
 
     public string UpdateExp()
     {
-        Debug.Log("Current ret: " + ret.Value);
-
         float increment = 5;
         if (float.TryParse(ret.Value, out increment))
         {
@@ -44,7 +41,6 @@ public class ExpManager : MonoBehaviour
 
         ret.Value = "0";
 
-        Debug.Log($"exp: {exp} %");
         return $"exp: {exp} %";
     }
 }
