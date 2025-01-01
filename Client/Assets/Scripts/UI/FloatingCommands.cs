@@ -193,7 +193,7 @@ public class FloatingCommands : MonoBehaviour
     #region UI
     void CreateFloatingCommand(string commandText)
     {
-        boundarySize = new Vector2(1720, 880);
+        boundarySize = new Vector2(920, 880);
 
         Vector3 startPosition = new Vector3(
             Random.Range(-boundarySize.x / 2, boundarySize.x / 2),
@@ -208,7 +208,7 @@ public class FloatingCommands : MonoBehaviour
 
         rectTransform.anchoredPosition = startPosition;
         newCommand.GetComponent<TextMesh>().text = commandText; 
-        textMesh.characterSize = Random.Range(20, 50);
+        textMesh.characterSize = Random.Range(24, 48);
 
         newCommand.AddComponent<CommandMover>().Initialize(boundarySize);
     }
