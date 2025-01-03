@@ -185,6 +185,31 @@ public class FloatingCommands : MonoBehaviour
         UpdateCommandUI();
     }
 
+    public void EnterCommandGlobal(string commandText)
+    {
+        // 현재 계층에서 명령어를 찾는 시도
+        if (commandList.Contains(commandText))
+        {
+            EnterCommand(commandText);
+            return;
+        }
+
+        // 최상위 계층으로 이동하여 명령어 탐색 및 실행
+        string? previousModule = moduleName; // 현재 계층을 저장
+        moduleName = null;                   // 최상위 계층으로 이동
+        SetCommand();                        // 최상위 계층의 명령어 목록 설정
+
+        if (commandList.Contains(commandText))
+        {
+            EnterCommand(commandText);       // 최상위 계층에서 명령어 실행
+        }
+
+        // 원래 계층으로 복귀
+        moduleName = previousModule;
+        SetCommand();
+    }
+
+
     private void OnDestroy()
     {
         func!.Stop();
