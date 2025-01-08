@@ -776,7 +776,7 @@ GameObject:
   - component: {fileID: 746770347}
   - component: {fileID: 746770349}
   - component: {fileID: 746770348}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: CurCmdUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -792,14 +792,14 @@ RectTransform:
   m_GameObject: {fileID: 746770345}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1722329751}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 9000, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &746770347
@@ -2562,6 +2562,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FloatingCommandsPrefab: {fileID: 8368480408978509373, guid: 793e95e8d30239847accd631291c92d6, type: 3}
   boundarySize: {x: 0, y: 0}
+  currentCommand: {fileID: 746770346}
   curName: {fileID: 746770345}
 --- !u!1001 &1966929457
 PrefabInstance:

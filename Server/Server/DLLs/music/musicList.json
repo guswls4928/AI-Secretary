@@ -3,11 +3,11 @@
         "musicList" : [
           {
             "musicName": "music1",
-            "musicPath": "C:\\Users\\user\\Desktop\\LLMlab\\AI-Secretary\\Server\\Server\\DLLs\\music\\Musics\\귀여움_01.mp3"
+            "musicPath": "C:\\Users\\박서연\\Desktop\\Unity Projects\\AI-Secretary\\Server\\Server\\DLLs\\music\\Musics\\귀여움_01.mp3"
           },
           {
             "musicName": "music2",
-            "musicPath": "C:\\Users\\user\\Desktop\\LLMlab\\AI-Secretary\\Server\\Server\\DLLs\\music\\Musics\\귀여움_02.mp3"
+            "musicPath": "C:\\Users\\박서연\\Desktop\\Unity Projects\\AI-Secretary\\Server\\Server\\DLLs\\music\\Musics\\귀여움_02.mp3"
           }
         ]
     }

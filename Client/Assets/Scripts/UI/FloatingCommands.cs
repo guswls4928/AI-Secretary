@@ -9,12 +9,13 @@ public class FloatingCommands : MonoBehaviour
     public GameObject FloatingCommandsPrefab;
     public Vector2 boundarySize;
 
+    private Vector2 screenCenter;  // 화면 중심 좌표
+    Dictionary<string, string> DllList = new();
+    List<string> commandList = new();
+
     public GameObject curName;
     private CurrentCommand curNameManager;
 
-    Dictionary<string, string> DllList = new();
-
-    List<string> commandList = new();
 #nullable enable
     string? moduleName;
     dynamic? func;
@@ -80,6 +81,21 @@ public class FloatingCommands : MonoBehaviour
 
         curNameManager = curName.GetComponent<CurrentCommand>();
 
+        boundarySize = new Vector2(920, 880);
+        Vector2 localPoint;
+
+        Canvas canvas = GetComponentInParent<Canvas>();
+        Camera uiCamera = canvas.renderMode == RenderMode.ScreenSpaceCamera ? canvas.worldCamera : null;
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            transform as RectTransform,
+            new Vector2(Screen.width / 2, Screen.height / 2),
+            uiCamera,
+            out localPoint
+        );
+        screenCenter = localPoint;
+
+
         SetCommand();
         UpdateCommandUI();
     }
@@ -89,6 +105,15 @@ public class FloatingCommands : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             MoveFloatingCommand(transform.GetChild(i).gameObject);
+        }
+    }
+
+    void MoveFloatingCommand(GameObject command)
+    {
+        CommandMover mover = command.GetComponent<CommandMover>();
+        if (mover != null)
+        {
+            mover.Move();
         }
     }
 
@@ -219,8 +244,6 @@ public class FloatingCommands : MonoBehaviour
     #region UI
     void CreateFloatingCommand(string commandText)
     {
-        boundarySize = new Vector2(920, 880);
-
         Vector3 startPosition = new Vector3(
             Random.Range(-boundarySize.x / 2, boundarySize.x / 2),
             Random.Range(-boundarySize.y / 2, boundarySize.y / 2),
@@ -228,80 +251,92 @@ public class FloatingCommands : MonoBehaviour
         );
 
         var newCommand = Instantiate(FloatingCommandsPrefab, transform);
-
         RectTransform rectTransform = newCommand.GetComponent<RectTransform>();
-        TextMeshProUGUI textMeshPro = newCommand.GetComponentInChildren<TextMeshProUGUI>(); // Ensure we fetch TextMeshProUGUI
+        TextMeshProUGUI textMeshPro = newCommand.GetComponentInChildren<TextMeshProUGUI>();
 
         if (textMeshPro == null)
         {
             Debug.LogError("TextMeshProUGUI component not found in prefab.");
-            return; // Exit early to avoid null reference
+            return;
         }
 
         rectTransform.anchoredPosition = startPosition;
         textMeshPro.text = commandText;
-        textMeshPro.fontSize = Random.Range(24, 48); // Adjust font size as needed
+        textMeshPro.fontSize = Random.Range(28, 64);
 
-        newCommand.AddComponent<CommandMover>().Initialize(boundarySize);
-    }
-
-
-    // 명령어 이동 처리 함수
-    void MoveFloatingCommand(GameObject command)
-    {
-        CommandMover mover = command.GetComponent<CommandMover>();
-        if (mover != null)
-        {
-            mover.Move();
-        }
+        var mover = newCommand.AddComponent<CommandMover>();
+        mover.Initialize(boundarySize, screenCenter);
     }
 }
 
 public class CommandMover : MonoBehaviour
 {
-    private Vector3 direction;
-    private float speed = 20f;
     private Vector2 boundary;
     private RectTransform rectTransform;
     private bool isDragging = false;
+    private bool isReturningToCircle = false;
 
-    public void Initialize(Vector2 boundarySize)
+    private Vector3 screenCenter;
+    private float radius = 20f;
+    private float angle = 0f;
+    private float rotationSpeed = 10f;
+
+    public void Initialize(Vector2 boundarySize, Vector3 center)
     {
         boundary = boundarySize;
         rectTransform = GetComponent<RectTransform>();
-        direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0).normalized;
+        screenCenter = center;
     }
 
     public void SetDragging(bool dragging)
     {
         isDragging = dragging;
+        if (!isDragging)
+        {
+            isReturningToCircle = true;
+        }
     }
 
     public void Move()
     {
-        if (isDragging) return; // Stop moving when dragging
-        rectTransform.anchoredPosition += (Vector2)(direction * speed * Time.deltaTime);
-        CheckBoundaryCollision();
+        if (isDragging) return;
+
+        if (isReturningToCircle)
+        {
+            Vector2 targetPosition = CalculateCirclePosition(angle);
+            rectTransform.anchoredPosition = Vector2.MoveTowards(
+                rectTransform.anchoredPosition,
+                targetPosition,
+                Time.deltaTime * 10f
+            );
+
+            if (Vector2.Distance(rectTransform.anchoredPosition, targetPosition) < 1f)
+            {
+                isReturningToCircle = false;
+            }
+        }
+        else
+        {
+            angle += rotationSpeed * Time.deltaTime;
+            if (angle >= 360f) angle -= 360f;
+
+            Vector2 targetPosition = CalculateCirclePosition(angle);
+            rectTransform.anchoredPosition = targetPosition;
+        }
     }
 
-    private void CheckBoundaryCollision()
+
+    private Vector2 CalculateCirclePosition(float currentAngle)
     {
-        Vector3 pos = rectTransform.anchoredPosition;
+        float x = screenCenter.x + Mathf.Cos(Mathf.Deg2Rad * currentAngle) * radius;
+        float y = screenCenter.y + Mathf.Sin(Mathf.Deg2Rad * currentAngle) * radius;
 
-        if (pos.x < -boundary.x / 2 || pos.x > boundary.x / 2)
-        {
-            direction.x = -direction.x;
-            pos.x = Mathf.Clamp(pos.x, -boundary.x / 2, boundary.x / 2);
-        }
-
-        if (pos.y < -boundary.y / 2 || pos.y > boundary.y / 2)
-        {
-            direction.y = -direction.y;
-            pos.y = Mathf.Clamp(pos.y, -boundary.y / 2, boundary.y / 2);
-        }
-
-        rectTransform.anchoredPosition = pos;
+        return new Vector2(x, y);
     }
+
+
 }
+
+
 
 #endregion
