@@ -9,13 +9,12 @@ public class FloatingCommands : MonoBehaviour
     public GameObject FloatingCommandsPrefab;
     public Vector2 boundarySize;
 
-    private Vector2 screenCenter;  // 화면 중심 좌표
-    Dictionary<string, string> DllList = new();
-    List<string> commandList = new();
-
     public GameObject curName;
     private CurrentCommand curNameManager;
 
+    Dictionary<string, string> DllList = new();
+
+    List<string> commandList = new();
 #nullable enable
     string? moduleName;
     dynamic? func;
@@ -74,27 +73,12 @@ public class FloatingCommands : MonoBehaviour
 
             string name = System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetFileNameWithoutExtension(file));
 
-            dynamic temp = Py.Import(name); 
+            dynamic temp = Py.Import(name);
 
             DllList.Add((string)temp.GetName(), name);
         }
 
         curNameManager = curName.GetComponent<CurrentCommand>();
-
-        boundarySize = new Vector2(920, 880);
-        Vector2 localPoint;
-
-        Canvas canvas = GetComponentInParent<Canvas>();
-        Camera uiCamera = canvas.renderMode == RenderMode.ScreenSpaceCamera ? canvas.worldCamera : null;
-
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            transform as RectTransform,
-            new Vector2(Screen.width / 2, Screen.height / 2),
-            uiCamera,
-            out localPoint
-        );
-        screenCenter = localPoint;
-
 
         SetCommand();
         UpdateCommandUI();
@@ -105,15 +89,6 @@ public class FloatingCommands : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             MoveFloatingCommand(transform.GetChild(i).gameObject);
-        }
-    }
-
-    void MoveFloatingCommand(GameObject command)
-    {
-        CommandMover mover = command.GetComponent<CommandMover>();
-        if (mover != null)
-        {
-            mover.Move();
         }
     }
 
@@ -197,7 +172,7 @@ public class FloatingCommands : MonoBehaviour
 
             try
             {
-                if((bool)req == false)
+                if ((bool)req == false)
                 {
                     MyPlayer.Instance.SendCommand(moduleName, selectedCommand);
                 }
@@ -210,30 +185,6 @@ public class FloatingCommands : MonoBehaviour
         UpdateCommandUI();
     }
 
-    public void EnterCommandGlobal(string commandText)
-    {
-        // 현재 계층에서 명령어를 찾는 시도
-        if (commandList.Contains(commandText))
-        {
-            EnterCommand(commandText);
-            return;
-        }
-
-        // 최상위 계층으로 이동하여 명령어 탐색 및 실행
-        string? previousModule = moduleName; // 현재 계층을 저장
-        moduleName = null;                   // 최상위 계층으로 이동
-        SetCommand();                        // 최상위 계층의 명령어 목록 설정
-
-        if (commandList.Contains(commandText))
-        {
-            EnterCommand(commandText);       // 최상위 계층에서 명령어 실행
-        }
-
-        // 원래 계층으로 복귀
-        moduleName = previousModule;
-        SetCommand();
-    }
-
 
     private void OnDestroy()
     {
@@ -244,99 +195,88 @@ public class FloatingCommands : MonoBehaviour
     #region UI
     void CreateFloatingCommand(string commandText)
     {
+        boundarySize = new Vector2(920, 880);
+
         Vector3 startPosition = new Vector3(
             Random.Range(-boundarySize.x / 2, boundarySize.x / 2),
             Random.Range(-boundarySize.y / 2, boundarySize.y / 2),
             0
         );
-
         var newCommand = Instantiate(FloatingCommandsPrefab, transform);
+
         RectTransform rectTransform = newCommand.GetComponent<RectTransform>();
-        TextMeshProUGUI textMeshPro = newCommand.GetComponentInChildren<TextMeshProUGUI>();
+        TextMeshProUGUI textMeshPro = newCommand.GetComponentInChildren<TextMeshProUGUI>(); // Ensure we fetch TextMeshProUGUI
 
         if (textMeshPro == null)
         {
             Debug.LogError("TextMeshProUGUI component not found in prefab.");
-            return;
+            return; // Exit early to avoid null reference
         }
 
         rectTransform.anchoredPosition = startPosition;
         textMeshPro.text = commandText;
-        textMeshPro.fontSize = Random.Range(28, 64);
+        textMeshPro.fontSize = Random.Range(24, 48); // Adjust font size as needed
 
-        var mover = newCommand.AddComponent<CommandMover>();
-        mover.Initialize(boundarySize, screenCenter);
+        newCommand.AddComponent<CommandMover>().Initialize(boundarySize);
+    }
+
+
+    // 명령어 이동 처리 함수
+    void MoveFloatingCommand(GameObject command)
+    {
+        CommandMover mover = command.GetComponent<CommandMover>();
+        if (mover != null)
+        {
+            mover.Move();
+        }
     }
 }
 
 public class CommandMover : MonoBehaviour
 {
+    private Vector3 direction;
+    private float speed = 20f;
     private Vector2 boundary;
     private RectTransform rectTransform;
     private bool isDragging = false;
-    private bool isReturningToCircle = false;
 
-    private Vector3 screenCenter;
-    private float radius = 20f;
-    private float angle = 0f;
-    private float rotationSpeed = 10f;
-
-    public void Initialize(Vector2 boundarySize, Vector3 center)
+    public void Initialize(Vector2 boundarySize)
     {
         boundary = boundarySize;
         rectTransform = GetComponent<RectTransform>();
-        screenCenter = center;
+        direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0).normalized;
     }
 
     public void SetDragging(bool dragging)
     {
         isDragging = dragging;
-        if (!isDragging)
-        {
-            isReturningToCircle = true;
-        }
     }
 
     public void Move()
     {
-        if (isDragging) return;
-
-        if (isReturningToCircle)
-        {
-            Vector2 targetPosition = CalculateCirclePosition(angle);
-            rectTransform.anchoredPosition = Vector2.MoveTowards(
-                rectTransform.anchoredPosition,
-                targetPosition,
-                Time.deltaTime * 10f
-            );
-
-            if (Vector2.Distance(rectTransform.anchoredPosition, targetPosition) < 1f)
-            {
-                isReturningToCircle = false;
-            }
-        }
-        else
-        {
-            angle += rotationSpeed * Time.deltaTime;
-            if (angle >= 360f) angle -= 360f;
-
-            Vector2 targetPosition = CalculateCirclePosition(angle);
-            rectTransform.anchoredPosition = targetPosition;
-        }
+        if (isDragging) return; // Stop moving when dragging
+        rectTransform.anchoredPosition += (Vector2)(direction * speed * Time.deltaTime);
+        CheckBoundaryCollision();
     }
 
-
-    private Vector2 CalculateCirclePosition(float currentAngle)
+    private void CheckBoundaryCollision()
     {
-        float x = screenCenter.x + Mathf.Cos(Mathf.Deg2Rad * currentAngle) * radius;
-        float y = screenCenter.y + Mathf.Sin(Mathf.Deg2Rad * currentAngle) * radius;
+        Vector3 pos = rectTransform.anchoredPosition;
 
-        return new Vector2(x, y);
+        if (pos.x < -boundary.x / 2 || pos.x > boundary.x / 2)
+        {
+            direction.x = -direction.x;
+            pos.x = Mathf.Clamp(pos.x, -boundary.x / 2, boundary.x / 2);
+        }
+
+        if (pos.y < -boundary.y / 2 || pos.y > boundary.y / 2)
+        {
+            direction.y = -direction.y;
+            pos.y = Mathf.Clamp(pos.y, -boundary.y / 2, boundary.y / 2);
+        }
+
+        rectTransform.anchoredPosition = pos;
     }
-
-
 }
-
-
 
 #endregion
