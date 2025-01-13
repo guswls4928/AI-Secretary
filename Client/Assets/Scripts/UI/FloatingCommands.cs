@@ -2,6 +2,7 @@ using Python.Runtime;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 
 public class FloatingCommands : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class FloatingCommands : MonoBehaviour
 
     List<string> commandList = new();
 #nullable enable
-    string? moduleName;
+    [SerializeField] string? moduleName;
     dynamic? func;
 
     private static FloatingCommands instance = null;
@@ -72,7 +73,7 @@ public class FloatingCommands : MonoBehaviour
 
             string name = System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetFileNameWithoutExtension(file));
 
-            dynamic temp = Py.Import(name); 
+            dynamic temp = Py.Import(name);
 
             DllList.Add((string)temp.GetName(), name);
         }
@@ -171,7 +172,7 @@ public class FloatingCommands : MonoBehaviour
 
             try
             {
-                if((bool)req == false)
+                if ((bool)req == false)
                 {
                     MyPlayer.Instance.SendCommand(moduleName, selectedCommand);
                 }
@@ -184,6 +185,7 @@ public class FloatingCommands : MonoBehaviour
         UpdateCommandUI();
     }
 
+
     private void OnDestroy()
     {
         func!.Stop();
@@ -193,25 +195,31 @@ public class FloatingCommands : MonoBehaviour
     #region UI
     void CreateFloatingCommand(string commandText)
     {
-        boundarySize = new Vector2(1720, 880);
+        boundarySize = new Vector2(920, 880);
 
         Vector3 startPosition = new Vector3(
             Random.Range(-boundarySize.x / 2, boundarySize.x / 2),
             Random.Range(-boundarySize.y / 2, boundarySize.y / 2),
             0
         );
-
         var newCommand = Instantiate(FloatingCommandsPrefab, transform);
 
         RectTransform rectTransform = newCommand.GetComponent<RectTransform>();
-        TextMesh textMesh = newCommand.GetComponent<TextMesh>();
+        TextMeshProUGUI textMeshPro = newCommand.GetComponentInChildren<TextMeshProUGUI>(); // Ensure we fetch TextMeshProUGUI
+
+        if (textMeshPro == null)
+        {
+            Debug.LogError("TextMeshProUGUI component not found in prefab.");
+            return; // Exit early to avoid null reference
+        }
 
         rectTransform.anchoredPosition = startPosition;
-        newCommand.GetComponent<TextMesh>().text = commandText; 
-        textMesh.characterSize = Random.Range(20, 50);
+        textMeshPro.text = commandText;
+        textMeshPro.fontSize = Random.Range(24, 48); // Adjust font size as needed
 
         newCommand.AddComponent<CommandMover>().Initialize(boundarySize);
     }
+
 
     // 명령어 이동 처리 함수
     void MoveFloatingCommand(GameObject command)
@@ -230,6 +238,7 @@ public class CommandMover : MonoBehaviour
     private float speed = 20f;
     private Vector2 boundary;
     private RectTransform rectTransform;
+    private bool isDragging = false;
 
     public void Initialize(Vector2 boundarySize)
     {
@@ -238,19 +247,22 @@ public class CommandMover : MonoBehaviour
         direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0).normalized;
     }
 
-    // 이동 처리
+    public void SetDragging(bool dragging)
+    {
+        isDragging = dragging;
+    }
+
     public void Move()
     {
+        if (isDragging) return; // Stop moving when dragging
         rectTransform.anchoredPosition += (Vector2)(direction * speed * Time.deltaTime);
         CheckBoundaryCollision();
     }
 
-    // 경계 충돌 반응
     private void CheckBoundaryCollision()
     {
         Vector3 pos = rectTransform.anchoredPosition;
 
-        // ui 화면 경계에 충돌할 경우 xy축 반전.
         if (pos.x < -boundary.x / 2 || pos.x > boundary.x / 2)
         {
             direction.x = -direction.x;
@@ -266,4 +278,5 @@ public class CommandMover : MonoBehaviour
         rectTransform.anchoredPosition = pos;
     }
 }
+
 #endregion

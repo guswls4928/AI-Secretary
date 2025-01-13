@@ -32,7 +32,7 @@ public class InputCommands : MonoBehaviour
         commandManager.EnterCommand(inputText);
 
         text.text = "";
-        Invoke("changeButton", 2);
+        Invoke("changeButton", 1);
         button.interactable = !button.interactable;
     }
 }
