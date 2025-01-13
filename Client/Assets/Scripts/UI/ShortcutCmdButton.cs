@@ -6,6 +6,7 @@ public class ShortcutCmdButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
 {
     private string commandText = string.Empty;
     private TextMeshProUGUI buttonText;
+    
 
     private void Awake()
     {
@@ -54,7 +55,7 @@ public class ShortcutCmdButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
         Debug.Log($"단축키 실행: {commandText}");
 
-        FloatingCommands.Instance.EnterCommandGlobal(commandText);
+        FloatingCommands.Instance.EnterCommand(commandText);
     }
 
 }

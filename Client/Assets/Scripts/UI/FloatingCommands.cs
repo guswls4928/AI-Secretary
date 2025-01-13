@@ -16,7 +16,7 @@ public class FloatingCommands : MonoBehaviour
 
     List<string> commandList = new();
 #nullable enable
-    string? moduleName;
+    [SerializeField] string? moduleName;
     dynamic? func;
 
     private static FloatingCommands instance = null;
