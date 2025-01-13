@@ -54,13 +54,13 @@ namespace Server
 			_sessions.Remove(session);
         }
 
-        public void Chat(ClientSession session, C_Chat packet)
+        public async void Chat(ClientSession session, C_Chat packet)
 		{
 			session.message = packet.command;
 			Console.WriteLine($"{session.PlayerId}'s Chat : {packet.command}");
 
             S_Response response = new S_Response();
-            response.response = DLLManager.Instance.Execute(packet);
+            response.response = await DLLManager.Instance.Execute(packet);
             Broadcast(response.Write());
 		}
 

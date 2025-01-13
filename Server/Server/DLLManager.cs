@@ -38,7 +38,7 @@ namespace Server
             }
         }
 
-        public string Execute(C_Chat packet)
+        public async Task<string> Execute(C_Chat packet)
         {
             using (Py.GIL())
             {
