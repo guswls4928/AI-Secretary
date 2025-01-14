@@ -159,7 +159,7 @@ class State(Enum):
                             self.query.append(command)
                         return {
                             "state" : False,
-                            "body" : self.query
+                            "body" : serialize(self.query)
                         }
                     else:
                         query = self.query
