@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using System.Text.RegularExpressions;
 
 public class FloatingCommands : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class FloatingCommands : MonoBehaviour
 
     public GameObject curName;
     private CurrentCommand curNameManager;
+
+    public GameObject query;
 
     Dictionary<string, string> DllList = new();
 
@@ -172,9 +175,15 @@ public class FloatingCommands : MonoBehaviour
 
             try
             {
-                if ((bool)req == false)
+                if ((bool)req["state"] == true)
                 {
-                    MyPlayer.Instance.SendCommand(moduleName, selectedCommand);
+                    MyPlayer.Instance.SendCommand(moduleName, (string)req["body"]);
+                    query.GetComponent<TextMesh>().text = "";
+                }
+                else if ((bool)req["state"] == false)
+                {
+                    Debug.Log((string)req["body"]);
+                    query.GetComponent<TextMesh>().text = Regex.Replace((string)req["body"], @"[^a-zA-Z0-9가-힣,\s]", "");
                 }
             }
             catch (System.Exception e) { }
