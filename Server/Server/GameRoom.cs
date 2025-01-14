@@ -63,6 +63,5 @@ namespace Server
             response.response = await DLLManager.Instance.Execute(packet);
             Broadcast(response.Write());
 		}
-
     }
 }

@@ -8,7 +8,7 @@ setlocal enabledelayedexpansion
 
 REM Python 빌드 실행
 echo [INFO] 새로 빌드 중...
-"C:\Users\yemi7\anaconda3\envs\mg\python.exe" setup.py build_ext --inplace
+"C:\Users\Hyeon\anaconda3\python.exe" setup.py build_ext --inplace
 IF %ERRORLEVEL% NEQ 0 (
     echo [ERROR] 빌드에 실패했습니다.
     pause

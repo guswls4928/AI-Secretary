@@ -62,7 +62,9 @@ class Command(Enum):
         return self.func(query)
     
     def Create(query):
-        return generate(f"{query[0]} {query[1]} track with {query[2:]}", 512)
+        file = generate(f"{query[1]} {query[0]} track with {query[2:]}", 10)
+        
+        return {"musicName" : query[0], "musicPath" : file}
     
     def MusicList(id):
         with open(os.path.join(dlls_path, "music/musicList.json"), "r", encoding="utf-8") as f:
@@ -80,7 +82,6 @@ class Music:
     def Execute(self, *args):
         query = deserialize(args[0])
         if isinstance(query, list):
-            print(query)
             self.music = Command.생성(query)
             return serialize(self.music)
         elif query == Command.목록:
@@ -91,7 +92,7 @@ class Music:
             with open(os.path.join(dlls_path, "music/musicList.json"), "r", encoding="utf-8") as f:
                 return serialize(next(item for item in json.load(f)[str(self.id)]["musicList"] if item["musicName"] == query))
 
-def CreateSession(id):
+def Create(id):
     return Music(id)
 
 def GetName():

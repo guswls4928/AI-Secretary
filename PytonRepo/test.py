@@ -18,6 +18,7 @@ if __name__ == '__main__':
 
         if req["state"] is True:
             res = Session.Execute(req["body"])
+            print(res)
             music.Execute(res)
         else:
             print(req["body"])

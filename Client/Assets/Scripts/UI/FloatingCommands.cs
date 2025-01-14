@@ -172,9 +172,9 @@ public class FloatingCommands : MonoBehaviour
 
             try
             {
-                if ((bool)req == false)
+                if ((bool)req["state"] == true)
                 {
-                    MyPlayer.Instance.SendCommand(moduleName, selectedCommand);
+                    MyPlayer.Instance.SendCommand(moduleName, (string)req["body"]);
                 }
             }
             catch (System.Exception e) { }
