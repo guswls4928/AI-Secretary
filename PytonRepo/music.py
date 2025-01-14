@@ -1,8 +1,6 @@
 from enum import Enum
-import json
-import os
+import json, scipy, math, tempfile, os
 from transformers import AutoProcessor, MusicgenForConditionalGeneration
-import scipy, math
 
 dlls_path = os.environ.get("DLLS_PATH", ".")
 
@@ -20,7 +18,10 @@ def generate(query, time):
 
 
     sampling_rate = model.config.audio_encoder.sampling_rate
-    scipy.io.wavfile.write("musicgen_out.wav", rate=sampling_rate, data=audio_values[0, 0].numpy())
+    output_dir = tempfile.gettempdir()
+    output_filename = os.path.join(output_dir, "musicgen_out.wav")
+    scipy.io.wavfile.write(output_filename, rate=sampling_rate, data=audio_values[0, 0].numpy())
+    return os.path.abspath(output_filename)
 
 def deserialize(obj):
     if not isinstance(obj, str):
@@ -61,7 +62,7 @@ class Command(Enum):
         return self.func(query)
     
     def Create(query):
-        generate(f"{query[0]} {query[1]} track with {query[2:]}", 512)
+        return generate(f"{query[0]} {query[1]} track with {query[2:]}", 512)
     
     def MusicList(id):
         with open(os.path.join(dlls_path, "music/musicList.json"), "r", encoding="utf-8") as f:
@@ -81,7 +82,7 @@ class Music:
         if isinstance(query, list):
             print(query)
             self.music = Command.생성(query)
-            return self.music
+            return serialize(self.music)
         elif query == Command.목록:
             return Command.목록(self.id)
         elif query == Command.저장:

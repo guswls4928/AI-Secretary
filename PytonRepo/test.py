@@ -1,5 +1,5 @@
 from musicClient import Create
-from music import CreateSession
+from music import Create as CreateSession
 
 if __name__ == '__main__':
     music = Create()
