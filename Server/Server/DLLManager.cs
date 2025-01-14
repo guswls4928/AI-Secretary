@@ -38,12 +38,19 @@ namespace Server
             }
         }
 
-        public string Execute(C_Chat packet)
+        public async Task<string> Execute(C_Chat packet)
         {
-            using (Py.GIL())
+            string result = null;
+
+            await Task.Run(() =>
             {
-                return _dllList[packet.module].Execute(packet.command, packet.query);
-            }
+                using (Py.GIL())
+                {
+                    result = _dllList[packet.module].Execute(packet.command, packet.query);
+                }
+            });
+
+            return result;
         }
     }
 }
